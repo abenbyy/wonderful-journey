@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -14,8 +15,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('role', 'user')->get();
-        return view('users', ['users'=>$users]);
+        if(Auth::user()&&Auth::user()->role === 'admin'){
+            $users = User::where('role', 'user')->get();
+            return view('users', ['users'=>$users]);
+        }
+        return redirect('/home');
     }
 
     public function profile(){

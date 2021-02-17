@@ -17,14 +17,20 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
-        return view('blog',['articles'=>$articles]);
+        if(Auth::user()&&Auth::user()->role === 'admin'){
+            $articles = Article::all();
+            return view('blog',['articles'=>$articles]);
+        }
+        
+        return redirect('/home');
     }
 
     public function user(){
-        $articles = Article::where('user_id', Auth::user()->id)->get();
-
-        return view('blog', ['articles'=>$articles]);
+        if(Auth::user()){
+            $articles = Article::where('user_id', Auth::user()->id)->get();
+            return view('blog', ['articles'=>$articles]);
+        }
+        return redirect('/login');
     }
 
     /**
